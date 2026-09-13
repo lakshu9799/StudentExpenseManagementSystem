@@ -5,6 +5,12 @@ public class StudentManager {
 
     private ArrayList<Student> students = new ArrayList<>();
     private Scanner scanner = new Scanner(System.in);
+    private FileManager fileManager = new FileManager();
+
+    // Constructor - load saved students
+    public StudentManager() {
+        students = fileManager.loadStudents();
+    }
 
     // Add Student
     public void addStudent() {
@@ -13,12 +19,32 @@ public class StudentManager {
         int id = scanner.nextInt();
         scanner.nextLine();
 
+        if (!InputValidator.isValidId(id)) {
+            System.out.println("Invalid ID!");
+            return;
+        }
+
+        if (getStudentById(id) != null) {
+            System.out.println("Student ID already exists!");
+            return;
+        }
+
         System.out.print("Enter Student Name: ");
         String name = scanner.nextLine();
+
+        if (!InputValidator.isValidName(name)) {
+            System.out.println("Name cannot be empty!");
+            return;
+        }
 
         System.out.print("Enter Age: ");
         int age = scanner.nextInt();
         scanner.nextLine();
+
+        if (!InputValidator.isValidAge(age)) {
+            System.out.println("Invalid age!");
+            return;
+        }
 
         System.out.print("Enter Course: ");
         String course = scanner.nextLine();
@@ -26,8 +52,16 @@ public class StudentManager {
         System.out.print("Enter Email: ");
         String email = scanner.nextLine();
 
+        if (!InputValidator.isValidEmail(email)) {
+            System.out.println("Invalid email!");
+            return;
+        }
+
         Student student = new Student(id, name, age, course, email);
+
         students.add(student);
+
+        fileManager.saveStudents(students);
 
         System.out.println("Student added successfully!");
     }
@@ -53,13 +87,12 @@ public class StudentManager {
         System.out.print("Enter Student ID to search: ");
         int id = scanner.nextInt();
 
-        for (Student student : students) {
+        Student student = getStudentById(id);
 
-            if (student.getId() == id) {
-                System.out.println("\nStudent Found!");
-                System.out.println(student);
-                return student;
-            }
+        if (student != null) {
+            System.out.println("\nStudent Found!");
+            System.out.println(student);
+            return student;
         }
 
         System.out.println("Student not found.");
@@ -73,29 +106,49 @@ public class StudentManager {
         int id = scanner.nextInt();
         scanner.nextLine();
 
-        for (Student student : students) {
+        Student student = getStudentById(id);
 
-            if (student.getId() == id) {
-
-                System.out.print("Enter New Name: ");
-                student.setName(scanner.nextLine());
-
-                System.out.print("Enter New Age: ");
-                student.setAge(scanner.nextInt());
-                scanner.nextLine();
-
-                System.out.print("Enter New Course: ");
-                student.setCourse(scanner.nextLine());
-
-                System.out.print("Enter New Email: ");
-                student.setEmail(scanner.nextLine());
-
-                System.out.println("Student updated successfully!");
-                return;
-            }
+        if (student == null) {
+            System.out.println("Student not found.");
+            return;
         }
 
-        System.out.println("Student not found.");
+        System.out.print("Enter New Name: ");
+        String name = scanner.nextLine();
+
+        if (!InputValidator.isValidName(name)) {
+            System.out.println("Invalid name!");
+            return;
+        }
+
+        System.out.print("Enter New Age: ");
+        int age = scanner.nextInt();
+        scanner.nextLine();
+
+        if (!InputValidator.isValidAge(age)) {
+            System.out.println("Invalid age!");
+            return;
+        }
+
+        System.out.print("Enter New Course: ");
+        String course = scanner.nextLine();
+
+        System.out.print("Enter New Email: ");
+        String email = scanner.nextLine();
+
+        if (!InputValidator.isValidEmail(email)) {
+            System.out.println("Invalid email!");
+            return;
+        }
+
+        student.setName(name);
+        student.setAge(age);
+        student.setCourse(course);
+        student.setEmail(email);
+
+        fileManager.saveStudents(students);
+
+        System.out.println("Student updated successfully!");
     }
 
     // Delete Student
@@ -104,19 +157,21 @@ public class StudentManager {
         System.out.print("Enter Student ID to delete: ");
         int id = scanner.nextInt();
 
-        for (Student student : students) {
+        Student student = getStudentById(id);
 
-            if (student.getId() == id) {
-                students.remove(student);
-                System.out.println("Student deleted successfully!");
-                return;
-            }
+        if (student == null) {
+            System.out.println("Student not found.");
+            return;
         }
 
-        System.out.println("Student not found.");
+        students.remove(student);
+
+        fileManager.saveStudents(students);
+
+        System.out.println("Student deleted successfully!");
     }
 
-    // Get student by ID
+    // Get Student by ID
     public Student getStudentById(int id) {
 
         for (Student student : students) {
@@ -159,11 +214,11 @@ public class StudentManager {
         System.out.print("Computer Networks: ");
         int computerNetworks = scanner.nextInt();
 
-        if (!InputValidator.isValidMarks(math) ||
-            !InputValidator.isValidMarks(java) ||
-            !InputValidator.isValidMarks(dbms) ||
-            !InputValidator.isValidMarks(os) ||
-            !InputValidator.isValidMarks(computerNetworks)) {
+        if (!InputValidator.isValidMarks(math)
+                || !InputValidator.isValidMarks(java)
+                || !InputValidator.isValidMarks(dbms)
+                || !InputValidator.isValidMarks(os)
+                || !InputValidator.isValidMarks(computerNetworks)) {
 
             System.out.println("Invalid marks! Marks must be between 0 and 100.");
             return null;

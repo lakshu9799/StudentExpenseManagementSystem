@@ -8,6 +8,7 @@ public class Main {
 
         StudentManager manager = new StudentManager();
         Menu menu = new Menu();
+        Report report = new Report();
 
         while (true) {
 
@@ -40,7 +41,11 @@ public class Main {
                     break;
 
                 case 6:
-                    manager.addMarks();
+                    Marks marks = manager.addMarks();
+
+                    if (marks != null) {
+                        System.out.println("Marks have been recorded.");
+                    }
                     break;
 
                 case 7:
@@ -52,8 +57,35 @@ public class Main {
                     if (student == null) {
                         System.out.println("Student not found.");
                     } else {
-                        System.out.println("Report feature will be connected next.");
+
+                        System.out.println("\nEnter marks to generate report:");
+
+                        System.out.print("Mathematics: ");
+                        int math = scanner.nextInt();
+
+                        System.out.print("Java: ");
+                        int java = scanner.nextInt();
+
+                        System.out.print("DBMS: ");
+                        int dbms = scanner.nextInt();
+
+                        System.out.print("Operating System: ");
+                        int os = scanner.nextInt();
+
+                        System.out.print("Computer Networks: ");
+                        int computerNetworks = scanner.nextInt();
+
+                        Marks studentMarks = new Marks(
+                                math,
+                                java,
+                                dbms,
+                                os,
+                                computerNetworks
+                        );
+
+                        report.generateReport(student, studentMarks);
                     }
+
                     break;
 
                 case 8:
