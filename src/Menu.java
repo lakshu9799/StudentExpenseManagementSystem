@@ -10,7 +10,9 @@ public class Menu {
         System.out.println("3. Search Student");
         System.out.println("4. Update Student");
         System.out.println("5. Delete Student");
-        System.out.println("6. Exit");
+        System.out.println("6. Add Marks");
+        System.out.println("7. Generate Student Report");
+        System.out.println("8. Exit");
         System.out.println("======================================");
     }
 }
