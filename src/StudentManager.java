@@ -48,7 +48,7 @@ public class StudentManager {
     }
 
     // Search Student
-    public void searchStudent() {
+    public Student searchStudent() {
 
         System.out.print("Enter Student ID to search: ");
         int id = scanner.nextInt();
@@ -58,11 +58,12 @@ public class StudentManager {
             if (student.getId() == id) {
                 System.out.println("\nStudent Found!");
                 System.out.println(student);
-                return;
+                return student;
             }
         }
 
         System.out.println("Student not found.");
+        return null;
     }
 
     // Update Student
@@ -113,5 +114,73 @@ public class StudentManager {
         }
 
         System.out.println("Student not found.");
+    }
+
+    // Get student by ID
+    public Student getStudentById(int id) {
+
+        for (Student student : students) {
+
+            if (student.getId() == id) {
+                return student;
+            }
+        }
+
+        return null;
+    }
+
+    // Add Marks
+    public Marks addMarks() {
+
+        System.out.print("Enter Student ID: ");
+        int id = scanner.nextInt();
+
+        Student student = getStudentById(id);
+
+        if (student == null) {
+            System.out.println("Student not found.");
+            return null;
+        }
+
+        System.out.println("\nEnter marks out of 100:");
+
+        System.out.print("Mathematics: ");
+        int math = scanner.nextInt();
+
+        System.out.print("Java: ");
+        int java = scanner.nextInt();
+
+        System.out.print("DBMS: ");
+        int dbms = scanner.nextInt();
+
+        System.out.print("Operating System: ");
+        int os = scanner.nextInt();
+
+        System.out.print("Computer Networks: ");
+        int computerNetworks = scanner.nextInt();
+
+        if (!InputValidator.isValidMarks(math) ||
+            !InputValidator.isValidMarks(java) ||
+            !InputValidator.isValidMarks(dbms) ||
+            !InputValidator.isValidMarks(os) ||
+            !InputValidator.isValidMarks(computerNetworks)) {
+
+            System.out.println("Invalid marks! Marks must be between 0 and 100.");
+            return null;
+        }
+
+        Marks marks = new Marks(
+                math,
+                java,
+                dbms,
+                os,
+                computerNetworks
+        );
+
+        System.out.println("Marks added successfully!");
+
+        marks.displayMarks();
+
+        return marks;
     }
 }
